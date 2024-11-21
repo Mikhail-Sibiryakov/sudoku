@@ -35,17 +35,20 @@ void printMatrix(struct Matrix* matrix, struct Vector* v) {
     int oldY = v->y;
     moveToPoint(v, 0, 0);
     for (int i = 0; i < matrix->n; ++i) {
+        printf(" ");
+        v->x += 1;
         for (int j = 0; j < matrix->m; ++j) {
             if (*(*(matrix->data + i) + j) == -1) {
-                printf(".");
+                printf(". ");
             } else {
-                printf("%d", *(*(matrix->data + i) + j));
+                printf("%d ", *(*(matrix->data + i) + j));
             }
-            v->x += 1;
-            if (j + 1 < matrix->m) {
-                printf(" ");
-                v->x += 1;
-            }
+            v->x += 2;
+            // if (j + 1 < matrix->m) {
+            //     printf(" ");
+            //     v->x += 1;
+            // }
+
             // logInt(v->x);
             // logInt(v->y);
             // logPrint("\n");
@@ -57,4 +60,29 @@ void printMatrix(struct Matrix* matrix, struct Vector* v) {
         }
     }
     moveToPoint(v, oldX, oldY);
+}
+
+void printChar(Vector* v, int x, int y, char ch) {
+    int oldX = v->x;
+    int oldY = v->y;
+    moveToPoint(v, x, y);
+    printf("%c", ch);
+    v->x += 1;
+    moveToPoint(v, oldX, oldY);
+}
+
+void showPosition(Vector* v) {
+    printChar(v, v->x - 1, v->y, '[');
+    printChar(v, v->x + 1, v->y, ']');
+}
+
+void hidePosition(Vector* v) {
+    printChar(v, v->x - 1, v->y, ' ');
+    printChar(v, v->x + 1, v->y, ' ');
+}
+
+void moveCursor(Vector* v, int a, int b) {
+    hidePosition(v);
+    moveVector(v, a, b);
+    showPosition(v);
 }
