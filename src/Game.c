@@ -226,14 +226,6 @@ void generateBoard(Game* game) {
                 setValue(game->access, i, j, 0);
                 ++game->cntNumbers;
             }
-            // setValue(game->matrix, i, j, randInt(1, n));
-            // setValue(game->access, i, j, 0);
-            // if (isValid()) {
-            //     ++game->cntNumbers;
-            // } else {
-            //     setValue(game->matrix, i, j, NONE);
-            //     setValue(game->access, i, j, 1);
-            // }
         }
         
         if (game->cntNumbers == cntNumbers) {

@@ -48,7 +48,6 @@ int getYInMatrix(Vector* v) {
     return v->y;
 }
 
-// In fact Vector would be a Singleton...
 Vector* getVector(int x, int y) {
     Vector* vec = malloc(sizeof(Vector));
     for (int i = 0; i < y; ++i) {
