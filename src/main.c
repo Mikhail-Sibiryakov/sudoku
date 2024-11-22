@@ -1,6 +1,10 @@
 #include "Matrix.h"
 #include "Vector.h"
 #include "printHelpers.h"
+#include "Game.h"
+#include "time.h"
+
+#define SZ 9
 
 
 //TODO: Camel style!!!
@@ -26,13 +30,10 @@ void logInt(int a) {
 }
 
 int main() {
-    // for (int i = 0; i < 10; ++i) {
-    //     logInt(i);
-    // }
+    srand(time(NULL));
     printf("Some information\n");
     printf("Some information\n");
-    int n = 3, m = 3;
-    scanf("%d%d", &n, &m);
+    int n = SZ, m = SZ;
     struct Vector* v = getVector(2*m + 1, n);
     char c;
 
@@ -40,10 +41,13 @@ int main() {
     set_input_mode();
     moveToPoint(v, 1, 0);
 
-    struct Matrix* matrix = getMatrix(n, m);
-    // fillMatrix(matrix);
-    // printMatrix(matrix, v);
 
+    Game* game = getGame(SZ);
+    startGame(game);
+    printGame(game, v);
+    showPosition(v);
+
+    int tmp = 0;
     int u = 1;
     while (1) {
         c = getchar();
@@ -62,22 +66,33 @@ int main() {
         } else if (c == 'q' || c == 'Q') {
             break;
         } else if (c == '\b'|| c == 127) {
-            setValue(matrix, getYInMatrix(v), getXInMatrix(v), -1);
-            // backToStart(v);
-            printMatrix(matrix, v);
+            removeNumb(game, getXInMatrix(v), getYInMatrix(v));
+            printGame(game, v);
+            // if (getValue(game->access, getYInMatrix(v), getXInMatrix(v))) {
+            //     setValue(game->matrix, getYInMatrix(v), getXInMatrix(v), 0);
+            //     printGame(game, v);
+            // }
         } else if (c == 'p') {
-            fillMatrix(matrix);
-            printMatrix(matrix, v);
+            // fillMatrix(matrix);
+            // printMatrix(matrix, v);
         } else if (c >= '0' && c <= '9') {
-            // logInt(getValue(matrix, getYInMatrix(v), getXInMatrix(v)));
-            if (getValue(matrix, getYInMatrix(v), getXInMatrix(v)) == -1) {
-                setValue(matrix, getYInMatrix(v), getXInMatrix(v), c - '0');
-            }
-            printMatrix(matrix, v);
+            setNumb(game, getXInMatrix(v), getYInMatrix(v), getInt(c));
+            // if (getValue(game->matrix, getYInMatrix(v), getXInMatrix(v)) == 0) {
+            //     setValue(game->matrix, getYInMatrix(v), getXInMatrix(v), c - '0');
+            // }
+            printGame(game, v);
         } else if (c == 'k') {
-            showPosition(v);
+            if (isCorrect(game)) {
+                tmp = game->cntNumbers;
+                break;
+            }
         } else if (c == 'l') {
-            hidePosition(v);
+            if (check(game)) {
+                break;
+            }
+        } else if (c == 'm') {
+            reset(game);
+            printGame(game, v);
         }
         // if (c == 'a' || c == 's' || c == 'd' || c == 'w') {
         //     showPosition(v);
@@ -86,7 +101,7 @@ int main() {
     hidePosition(v);
     backToStart(v);
     reset_input_mode();
-    deleteMatrix(matrix);
+    deleteGame(game);
     deleteVector(v);
     return 0;
 }

@@ -3,6 +3,7 @@
 
 
 int randInt(int a, int b) {
+    srand(time(NULL));
     return rand() % (b - a + 1) + a;
 }
 
@@ -40,3 +41,5 @@ void deleteMatrix(Matrix* matrix) {
     free(matrix->data);
     free(matrix);
 }
+
+void nothing() {}
