@@ -51,10 +51,13 @@ void loadBoard(Game* game) {
     }
 }
 
-void startGame(Game* game) {
+void startGame(Game* game, int mode) {
     clearBoard(game);
-    loadBoard(game);
-    // generateBoard(game);
+    if (mode == 1) {
+        loadBoard(game);
+    } else if (mode == 2) {
+        generateBoard(game);
+    }
 }
 
 void finishGame(Matrix* m) {
@@ -147,6 +150,37 @@ int check(Game* game) {
     return (isCorrect(game) && game->cntNumbers == game->matrix->n * game->matrix->n);
 }
 
+int isValid(Game* game, int i, int j, int val) {
+    int n = game->matrix->n;
+
+    // row
+    for (int k = 0; k < n; ++k) {
+        if (getValue(game->matrix, i, k) == val) {
+            return 0;
+        }
+    }
+
+    // col
+    for (int k = 0; k < n; ++k) {
+        if (getValue(game->matrix, k, j) == val) {
+            return 0;
+        }
+    }
+
+    // square
+    int sq = mySqrt(n);
+    int offset_i = i - i % sq;
+    int offset_j = j - j % sq;
+    for (int k1 = 0; k1 < sq; ++k1) {
+        for (int k2 = 0; k2 < sq; ++k2) {
+            if (getValue(game->matrix, k1 + offset_i, k2 + offset_j) == val) {
+                return 0;
+            }
+        }
+    }
+    return 1;
+}
+
 void clearBoard(Game* game) {
     game->cntNumbers = 0;
     int n = game->matrix->n;
@@ -187,14 +221,20 @@ void generateBoard(Game* game) {
         int i = randInt(0, n - 1);
         int j = randInt(0, n - 1);
         if (getValue(game->matrix, i, j) == NONE) {
-            setValue(game->matrix, i, j, randInt(1, n));
-            setValue(game->access, i, j, 0);
-            if (isCorrect(game)) {
+            int tmp = randInt(1, n);
+            if (isValid(game, i, j, tmp)) {
+                setValue(game->matrix, i, j, tmp);
+                setValue(game->access, i, j, 0);
                 ++game->cntNumbers;
-            } else {
-                setValue(game->matrix, i, j, NONE);
-                setValue(game->access, i, j, 1);
             }
+            // setValue(game->matrix, i, j, randInt(1, n));
+            // setValue(game->access, i, j, 0);
+            // if (isValid()) {
+            //     ++game->cntNumbers;
+            // } else {
+            //     setValue(game->matrix, i, j, NONE);
+            //     setValue(game->access, i, j, 1);
+            // }
         }
         
         if (game->cntNumbers == cntNumbers) {
@@ -208,28 +248,26 @@ void generateBoard(Game* game) {
     }
 }
 
+
 int findSolution(Game* game) {
     int n = game->matrix->n;
-    if (!isCorrect(game)) {
-        return 0;
-    } else if (game->cntNumbers == n * n) {
-        return 1;
-    }
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
             if (getValue(game->matrix, i, j) == NONE) {
                 for (int var = 1; var <=n; ++var) {
-                    setValue(game->matrix, i, j, var);
-                    ++game->cntNumbers;
-                    if (findSolution(game)) {
-                        return 1;
-                    } else {
-                        setValue(game->matrix, i, j, NONE);
-                        --game->cntNumbers;
+                    if (isValid(game, i, j, var)) {
+                        setValue(game->matrix, i, j, var);
+                        ++game->cntNumbers;
+                        if (findSolution(game)) {
+                            return 1;
+                        }
                     }
+                    setValue(game->matrix, i, j, NONE);
+                    --game->cntNumbers;
                 }
+                return 0;
             }
         }
     }
-    return 0;
+    return 1;
 }

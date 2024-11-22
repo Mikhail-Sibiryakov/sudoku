@@ -3,7 +3,6 @@
 
 
 int randInt(int a, int b) {
-    srand(time(NULL));
     return rand() % (b - a + 1) + a;
 }
 

@@ -4,37 +4,34 @@
 #include "Game.h"
 #include "time.h"
 
-#define SZ 9
-
-
-//TODO: Camel style!!!
-
-
-
 #define END '\0'
 #define INF 2e9
-#define FILE_LOG "log.txt"
-
-void logPrint(char* str) {
-    FILE* fp = fopen(FILE_LOG, "a");
-    fputs(str, fp);
-    fclose(fp);
-}
-
-void logInt(int a) {
-    char buffer[10];
-    buffer[0] = '0' + a;
-    buffer[1] = ' ';
-    buffer[2] = END;
-    logPrint(buffer);
-}
 
 int main() {
     srand(time(NULL));
-    printf("Some information\n");
-    printf("Some information\n");
-    int n = SZ, m = SZ;
-    struct Vector* v = getVector(2*m + 1, n);
+    printf("----------Sudoku----------\n");
+    int n = 0;
+    while (n != 4 && n != 9) {
+        printf("Select size of board...   ");
+        scanf("%d", &n);
+    }
+    int mode = 0;
+    while (n == 9 && mode != 1 && mode != 2) {
+        if (n == 9) {
+            printf("Select a mode:\n");
+            printf("1: board from dataset\n");
+            printf("2: generate right now!\n");
+            scanf("%d", &mode);
+        }
+    }
+    if (n == 4) {
+        mode = 2;
+    }
+    printf("Press 'q' to exit\n");
+    printf("Press 'r' to reset board \n");
+    printf("Press 'm' to auto solve (with animation) \n");
+    printf("Press 'i' to auto solve instantly \n");
+    Vector* v = getVector(2*n + 1, n);
     char c;
 
     // Устанавливаем режим ввода
@@ -42,8 +39,8 @@ int main() {
     moveToPoint(v, 1, 0);
 
 
-    Game* game = getGame(SZ);
-    startGame(game);
+    Game* game = getGame(n);
+    startGame(game, mode);
     printGame(game, v);
     showPosition(v);
 
@@ -52,51 +49,40 @@ int main() {
     while (1) {
         c = getchar();
         if (c == 'a') {
-            // moveVector(v, -2, 0);
             moveCursor(v, -2, 0);
         } else if (c == 'd') {
-            // moveVector(v, 2, 0);
             moveCursor(v, 2, 0);
         } else if (c == 'w') {
-            // moveVector(v, 0, -1);
             moveCursor(v, 0, -1);
         } else if (c == 's') {
-            // moveVector(v, 0, 1);
             moveCursor(v, 0, 1);
         } else if (c == 'q' || c == 'Q') {
             break;
         } else if (c == '\b'|| c == 127) {
             removeNumb(game, getXInMatrix(v), getYInMatrix(v));
             printGame(game, v);
-            // if (getValue(game->access, getYInMatrix(v), getXInMatrix(v))) {
-            //     setValue(game->matrix, getYInMatrix(v), getXInMatrix(v), 0);
-            //     printGame(game, v);
-            // }
-        } else if (c == 'p') {
-            // fillMatrix(matrix);
-            // printMatrix(matrix, v);
+        } else if (c == 'i') {
+            reset(game);
+            findSolution(game);
+            printGame(game, v);
         } else if (c >= '0' && c <= '9') {
             setNumb(game, getXInMatrix(v), getYInMatrix(v), getInt(c));
-            // if (getValue(game->matrix, getYInMatrix(v), getXInMatrix(v)) == 0) {
-            //     setValue(game->matrix, getYInMatrix(v), getXInMatrix(v), c - '0');
-            // }
             printGame(game, v);
-        } else if (c == 'k') {
-            if (isCorrect(game)) {
-                tmp = game->cntNumbers;
-                break;
-            }
         } else if (c == 'l') {
             if (check(game)) {
                 break;
             }
-        } else if (c == 'm') {
+        } else if (c == 'r') {
             reset(game);
             printGame(game, v);
+        } else if (c == 'm') {
+            reset(game);
+            solve(game, v);
+            // tmp = findSolution(game);
+            printGame(game, v);
+            showPosition(v);
+            break;
         }
-        // if (c == 'a' || c == 's' || c == 'd' || c == 'w') {
-        //     showPosition(v);
-        // }
     }
     hidePosition(v);
     backToStart(v);

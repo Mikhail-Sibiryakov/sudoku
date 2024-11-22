@@ -15,7 +15,7 @@ int getInt(char ch);
 
 void deleteGame(Game* game);
 
-void startGame(Game* game);
+void startGame(Game* game, int mode);
 
 void finishGame(Matrix* game);
 
@@ -34,4 +34,6 @@ void clearBoard(Game* game);
 void reset(Game* game);
 
 int findSolution(Game* game);
+
+int isValid(Game* game, int i, int j, int val);
 #endif

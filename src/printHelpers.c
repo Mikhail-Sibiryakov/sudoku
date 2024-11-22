@@ -93,26 +93,25 @@ void moveCursor(Vector* v, int a, int b) {
 int solve(Game* game, Vector* v) {
     hidePosition(v);
     int n = game->matrix->n;
-    if (!isCorrect(game)) {
-        return 0;
-    } else if (game->cntNumbers == n * n) {
-        return 1;
-    }
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
             if (getValue(game->matrix, i, j) == NONE) {
                 for (int var = 1; var <=n; ++var) {
-                    setValue(game->matrix, i, j, var);
-                    ++game->cntNumbers;
-                    if (solve(game, v)) {
-                        return 1;
-                    } else {
-                        setValue(game->matrix, i, j, NONE);
-                        --game->cntNumbers;
+                    if (isValid(game, i, j, var)) {
+                        setValue(game->matrix, i, j, var);
+                        printGame(game, v);
+                        usleep(100000);
+                        ++game->cntNumbers;
+                        if (solve(game, v)) {
+                            return 1;
+                        }
                     }
+                    setValue(game->matrix, i, j, NONE);
+                    --game->cntNumbers;
                 }
+                return 0;
             }
         }
     }
-    return 0;
+    return 1;
 }
