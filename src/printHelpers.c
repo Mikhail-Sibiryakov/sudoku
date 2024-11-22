@@ -2,30 +2,30 @@
 #define NONE 0
 
 void setInputMode() {
-    struct termios new_termios;
+    struct termios newTermios;
 
     // Получаем текущее состояние терминала
-    tcgetattr(STDIN_FILENO, &new_termios);
+    tcgetattr(STDIN_FILENO, &newTermios);
 
     // Устанавливаем режим неканонического ввода и отключаем эхо вывести символы
-    new_termios.c_lflag &= ~(ICANON | ECHO);
+    newTermios.c_lflag &= ~(ICANON | ECHO);
 
     // Применяем новые настройки
-    tcsetattr(STDIN_FILENO, TCSANOW, &new_termios);
+    tcsetattr(STDIN_FILENO, TCSANOW, &newTermios);
     printf("\e[?25l");
 }
 
 void resetInputMode() {
-    struct termios new_termios;
+    struct termios newTermios;
 
     // Получаем текущее состояние терминала
-    tcgetattr(STDIN_FILENO, &new_termios);
+    tcgetattr(STDIN_FILENO, &newTermios);
 
     // Восстанавливаем оригинальные настройки
-    new_termios.c_lflag |= (ICANON | ECHO);
+    newTermios.c_lflag |= (ICANON | ECHO);
 
     // Применяем новые настройки
-    tcsetattr(STDIN_FILENO, TCSANOW, &new_termios);
+    tcsetattr(STDIN_FILENO, TCSANOW, &newTermios);
     printf("\e[?25h");
 }
 
