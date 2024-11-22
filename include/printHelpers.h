@@ -7,9 +7,9 @@
 #include "Vector.h"
 #include "Game.h"
 
-void set_input_mode();
+void setInputMode();
 
-void reset_input_mode();
+void resetInputMode();
 
 void printGame(Game* game, Vector* v);
 

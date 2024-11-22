@@ -34,8 +34,7 @@ int main() {
     Vector* v = getVector(2*n + 1, n);
     char c;
 
-    // Устанавливаем режим ввода
-    set_input_mode();
+    setInputMode();
     moveToPoint(v, 1, 0);
 
 
@@ -78,15 +77,13 @@ int main() {
         } else if (c == 'm') {
             reset(game);
             solve(game, v);
-            // tmp = findSolution(game);
             printGame(game, v);
             showPosition(v);
-            break;
         }
     }
     hidePosition(v);
     backToStart(v);
-    reset_input_mode();
+    resetInputMode();
     deleteGame(game);
     deleteVector(v);
     return 0;

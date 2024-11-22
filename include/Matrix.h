@@ -24,6 +24,4 @@ Matrix* getMatrix(int n, int m);
 
 void deleteMatrix(Matrix* matrix);
 
-void nothing();
-
 #endif

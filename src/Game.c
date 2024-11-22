@@ -22,7 +22,6 @@ Game* getGame(int size) {
     Game* game = (Game*)malloc(sizeof(Game));
     game->matrix = getMatrix(size, size);
     game->access = getMatrix(size, size);
-    nothing();
     return game;
 }
 

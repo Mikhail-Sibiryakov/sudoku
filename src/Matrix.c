@@ -40,5 +40,3 @@ void deleteMatrix(Matrix* matrix) {
     free(matrix->data);
     free(matrix);
 }
-
-void nothing() {}

@@ -51,7 +51,6 @@ int getYInMatrix(Vector* v) {
 // In fact Vector would be a Singleton...
 Vector* getVector(int x, int y) {
     Vector* vec = malloc(sizeof(Vector));
-    // Vector* vec = malloc(sizeof(*vec)); What is better?
     for (int i = 0; i < y; ++i) {
         for (int j = 0; j < x; ++j) {
             printf("-");

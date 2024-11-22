@@ -1,7 +1,7 @@
 #include "printHelpers.h"
 #define NONE 0
 
-void set_input_mode() {
+void setInputMode() {
     struct termios new_termios;
 
     // Получаем текущее состояние терминала
@@ -15,7 +15,7 @@ void set_input_mode() {
     printf("\e[?25l");
 }
 
-void reset_input_mode() {
+void resetInputMode() {
     struct termios new_termios;
 
     // Получаем текущее состояние терминала
