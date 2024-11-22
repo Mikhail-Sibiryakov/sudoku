@@ -1,54 +1,59 @@
 #include "printHelpers.h"
+#define NONE 0
 
-void set_input_mode() {
-    struct termios new_termios;
+void setInputMode() {
+    struct termios newTermios;
 
     // Получаем текущее состояние терминала
-    tcgetattr(STDIN_FILENO, &new_termios);
+    tcgetattr(STDIN_FILENO, &newTermios);
 
     // Устанавливаем режим неканонического ввода и отключаем эхо вывести символы
-    new_termios.c_lflag &= ~(ICANON | ECHO);
+    newTermios.c_lflag &= ~(ICANON | ECHO);
 
     // Применяем новые настройки
-    tcsetattr(STDIN_FILENO, TCSANOW, &new_termios);
+    tcsetattr(STDIN_FILENO, TCSANOW, &newTermios);
+    printf("\e[?25l");
 }
 
-void reset_input_mode() {
-    struct termios new_termios;
+void resetInputMode() {
+    struct termios newTermios;
 
     // Получаем текущее состояние терминала
-    tcgetattr(STDIN_FILENO, &new_termios);
+    tcgetattr(STDIN_FILENO, &newTermios);
 
     // Восстанавливаем оригинальные настройки
-    new_termios.c_lflag |= (ICANON | ECHO);
+    newTermios.c_lflag |= (ICANON | ECHO);
 
     // Применяем новые настройки
-    tcsetattr(STDIN_FILENO, TCSANOW, &new_termios);
+    tcsetattr(STDIN_FILENO, TCSANOW, &newTermios);
+    printf("\e[?25h");
 }
 
 /*  Печатает матрицу по "вектору"
     Необходимо чтобы распечатанная матрица "помещалась" в поле, которое задает вектор.
     Вектор и курсур будут возвращены в исходное состоянии по завершении процедуры.
     */
-void printMatrix(struct Matrix* matrix, struct Vector* v) {
+void printGame(Game* game, Vector* v) {
+    Matrix* matrix = game->matrix;
     int oldX = v->x;
     int oldY = v->y;
     moveToPoint(v, 0, 0);
     for (int i = 0; i < matrix->n; ++i) {
+        printf(" ");
+        v->x += 1;
         for (int j = 0; j < matrix->m; ++j) {
-            if (*(*(matrix->data + i) + j) == -1) {
-                printf(".");
+            if (*(*(game->access->data + i) + j)) {
+                printf("\033[1;32m");
             } else {
-                printf("%d", *(*(matrix->data + i) + j));
+                printf("\033[1;31m");
             }
-            v->x += 1;
-            if (j + 1 < matrix->m) {
-                printf(" ");
-                v->x += 1;
+            if (*(*(matrix->data + i) + j) == NONE) {
+                printf(". ");
+            } else {
+                printf("%d ", *(*(matrix->data + i) + j));
             }
-            // logInt(v->x);
-            // logInt(v->y);
-            // logPrint("\n");
+            printf("\033[0m");
+            v->x += 2;
         }
         if (i + 1 < matrix->n) {
             printf("\n");
@@ -57,4 +62,56 @@ void printMatrix(struct Matrix* matrix, struct Vector* v) {
         }
     }
     moveToPoint(v, oldX, oldY);
+    showPosition(v);
+}
+
+void printChar(Vector* v, int x, int y, char ch) {
+    int oldX = v->x;
+    int oldY = v->y;
+    moveToPoint(v, x, y);
+    printf("%c", ch);
+    v->x += 1;
+    moveToPoint(v, oldX, oldY);
+}
+
+void showPosition(Vector* v) {
+    printChar(v, v->x - 1, v->y, '[');
+    printChar(v, v->x + 1, v->y, ']');
+}
+
+void hidePosition(Vector* v) {
+    printChar(v, v->x - 1, v->y, ' ');
+    printChar(v, v->x + 1, v->y, ' ');
+}
+
+void moveCursor(Vector* v, int a, int b) {
+    hidePosition(v);
+    moveVector(v, a, b);
+    showPosition(v);
+}
+
+int solve(Game* game, Vector* v) {
+    hidePosition(v);
+    int n = game->matrix->n;
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
+            if (getValue(game->matrix, i, j) == NONE) {
+                for (int var = 1; var <=n; ++var) {
+                    if (isValid(game, i, j, var)) {
+                        setValue(game->matrix, i, j, var);
+                        printGame(game, v);
+                        usleep(100000);
+                        ++game->cntNumbers;
+                        if (solve(game, v)) {
+                            return 1;
+                        }
+                    }
+                    setValue(game->matrix, i, j, NONE);
+                    --game->cntNumbers;
+                }
+                return 0;
+            }
+        }
+    }
+    return 1;
 }

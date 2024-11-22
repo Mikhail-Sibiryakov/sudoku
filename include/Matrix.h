@@ -2,6 +2,7 @@
 #define MATRIX_H
 
 #include <stdlib.h>
+#include <time.h>
 #define FROM 0
 #define TO 9
 
@@ -10,6 +11,8 @@ typedef struct Matrix {
     int n;
     int m;
 } Matrix;
+
+int randInt(int a, int b);
 
 void fillMatrix(Matrix *matrix);
 

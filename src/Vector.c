@@ -15,8 +15,11 @@ int getCorrectOffset(int l, int r, int base, int offset) {
 }
 
 void moveVector(Vector* v, int a, int b) {
-    a = getCorrectOffset(0, v->max_x, v->x, a);
-    b = getCorrectOffset(0, v->max_y, v->y, b);
+    int na = getCorrectOffset(0, v->max_x, v->x, a);
+    int nb = getCorrectOffset(0, v->max_y, v->y, b);
+    if (na != a || nb != b) {
+        return;
+    }
     v->x += a;
     v->y += b;
     if (a > 0) {
@@ -38,17 +41,15 @@ void moveToPoint(Vector* v, int x, int y) {
 }
 
 int getXInMatrix(Vector* v) {
-    return v->x / 2;
+    return (v->x - 1) / 2;
 }
 
 int getYInMatrix(Vector* v) {
     return v->y;
 }
 
-// In fact Vector would be a Singleton...
 Vector* getVector(int x, int y) {
     Vector* vec = malloc(sizeof(Vector));
-    // Vector* vec = malloc(sizeof(*vec)); What is better?
     for (int i = 0; i < y; ++i) {
         for (int j = 0; j < x; ++j) {
             printf("-");

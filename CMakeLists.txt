@@ -6,10 +6,8 @@ set(CMAKE_C_STANDARD_REQUIRED True)
 
 include_directories(include)
 
-add_library(Vector src/Vector.c)
-add_library(Matrix src/Matrix.c)
-add_library(printHelpers src/printHelpers.c)
+add_library(game src/Game.c src/Vector.c src/Matrix.c src/printHelpers.c)
 
 add_executable(${PROJECT_NAME} src/main.c)
 
-target_link_libraries(${PROJECT_NAME} Vector Matrix printHelpers)
+target_link_libraries(${PROJECT_NAME} game)
