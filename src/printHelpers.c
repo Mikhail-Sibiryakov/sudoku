@@ -98,16 +98,14 @@ int solve(Game* game, Vector* v) {
             if (getValue(game->matrix, i, j) == NONE) {
                 for (int var = 1; var <=n; ++var) {
                     if (isValid(game, i, j, var)) {
-                        setValue(game->matrix, i, j, var);
+                        setNumb(game, j, i, var);
                         printGame(game, v);
                         usleep(100000);
-                        ++game->cntNumbers;
                         if (solve(game, v)) {
                             return 1;
                         }
                     }
-                    setValue(game->matrix, i, j, NONE);
-                    --game->cntNumbers;
+                    removeNumb(game, j, i);
                 }
                 return 0;
             }

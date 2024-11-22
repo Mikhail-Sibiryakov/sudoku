@@ -142,7 +142,7 @@ int isCorrect(Game* game) {
 }
 
 int check(Game* game) {
-    return (isCorrect(game) && game->cntNumbers == game->matrix->n * game->matrix->n);
+    return (game->cntNumbers == game->matrix->n * game->matrix->n && isCorrect(game));
 }
 
 int isValid(Game* game, int i, int j, int val) {
@@ -243,14 +243,12 @@ int findSolution(Game* game) {
             if (getValue(game->matrix, i, j) == NONE) {
                 for (int var = 1; var <=n; ++var) {
                     if (isValid(game, i, j, var)) {
-                        setValue(game->matrix, i, j, var);
-                        ++game->cntNumbers;
+                        setNumb(game, j, i, var);
                         if (findSolution(game)) {
                             return 1;
                         }
                     }
-                    setValue(game->matrix, i, j, NONE);
-                    --game->cntNumbers;
+                    removeNumb(game, j, i);
                 }
                 return 0;
             }

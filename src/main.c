@@ -43,8 +43,7 @@ int main() {
     printGame(game, v);
     showPosition(v);
 
-    int tmp = 0;
-    int u = 1;
+    int result = 0;
     while (1) {
         c = getchar();
         if (c == 'a') {
@@ -80,11 +79,21 @@ int main() {
             printGame(game, v);
             showPosition(v);
         }
+        if (check(game)) {
+            result = 1;
+            break;
+        }
     }
+    int tmp = game->cntNumbers;
     hidePosition(v);
     backToStart(v);
     resetInputMode();
     deleteGame(game);
     deleteVector(v);
+    if (result) {
+        printf("Great solution !\n");
+    } else {
+        printf("%d\n", tmp);
+    }
     return 0;
 }
