@@ -59,10 +59,6 @@ void startGame(Game* game, int mode) {
     }
 }
 
-void finishGame(Matrix* m) {
-    
-}
-
 void removeNumb(Game* game, int x, int y) {
     if (getValue(game->access, y, x) && getValue(game->matrix, y, x) != NONE) {
         setValue(game->matrix, y, x, NONE);

@@ -17,8 +17,6 @@ void deleteGame(Game* game);
 
 void startGame(Game* game, int mode);
 
-void finishGame(Matrix* game);
-
 void removeNumb(Game* game, int x, int y);
 
 void setNumb(Game* game, int x, int y, int val);
