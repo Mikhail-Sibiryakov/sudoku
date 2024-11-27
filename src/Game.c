@@ -27,6 +27,7 @@ Game* getGame(int size) {
 
 void deleteGame(Game* game) {
     deleteMatrix(game->matrix);
+    deleteMatrix(game->access);
     free(game);
 }
 

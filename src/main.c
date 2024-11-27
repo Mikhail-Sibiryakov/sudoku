@@ -92,8 +92,6 @@ int main() {
     deleteVector(v);
     if (result) {
         printf("Great solution !\n");
-    } else {
-        printf("%d\n", tmp);
     }
     return 0;
 }
