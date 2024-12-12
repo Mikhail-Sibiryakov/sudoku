@@ -1,5 +1,4 @@
 #include "printHelpers.h"
-#define NONE 0
 
 void setInputMode() {
     struct termios newTermios;
@@ -12,6 +11,8 @@ void setInputMode() {
 
     // Применяем новые настройки
     tcsetattr(STDIN_FILENO, TCSANOW, &newTermios);
+
+    // Отключить мигание курсора
     printf("\e[?25l");
 }
 
@@ -26,13 +27,11 @@ void resetInputMode() {
 
     // Применяем новые настройки
     tcsetattr(STDIN_FILENO, TCSANOW, &newTermios);
+
+    // Вернуть мигание курсора
     printf("\e[?25h");
 }
 
-/*  Печатает матрицу по "вектору"
-    Необходимо чтобы распечатанная матрица "помещалась" в поле, которое задает вектор.
-    Вектор и курсур будут возвращены в исходное состоянии по завершении процедуры.
-    */
 void printGame(Game* game, Vector* v) {
     Matrix* matrix = game->matrix;
     int oldX = v->x;
@@ -100,7 +99,7 @@ int solve(Game* game, Vector* v) {
                     if (isValid(game, i, j, var)) {
                         setNumb(game, j, i, var);
                         printGame(game, v);
-                        usleep(100000);
+                        usleep(DELAY);
                         if (solve(game, v)) {
                             return 1;
                         }

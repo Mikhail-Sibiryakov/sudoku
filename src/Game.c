@@ -38,7 +38,6 @@ void loadBoard(Game* game) {
     if (fp) {
         for (int i = 0; i < q; ++i) {
             fgets(buffer, SIZE_BF, fp);
-            // printf("%s\n", buffer);
             int n = game->matrix->n;
             for (int i = 0; i < n * n; ++i) {
                 int value = getInt(buffer[i]);
